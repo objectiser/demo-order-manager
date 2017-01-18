@@ -41,7 +41,7 @@ public class AccountHandler {
 
     @GET
     @Path("/accounts/{id}")
-    public Response getOne(@PathParam("id") String id) {
+    public Response getAccount(@PathParam("id") String id) {
     	if (!accounts.contains(id)) {
     		return Response.serverError().entity("Account Not Found").build();
     	}

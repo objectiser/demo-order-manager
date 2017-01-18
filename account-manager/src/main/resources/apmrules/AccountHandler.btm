@@ -1,0 +1,10 @@
+
+RULE AccountHandler.placeOrder Start
+CLASS org.hawkular.apm.example.ordermgr.accounts.AccountHandler
+METHOD getAccount
+HELPER org.hawkular.apm.agent.opentracing.OpenTracingManager
+AT ENTRY
+IF hasSpan()
+DO
+  getSpan().setTag("http.url_template","/accounts/{accountId}");
+ENDRULE
