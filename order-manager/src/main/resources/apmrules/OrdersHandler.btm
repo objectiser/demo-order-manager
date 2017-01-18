@@ -1,0 +1,30 @@
+
+RULE OrdersHandler.placeOrder Start
+CLASS org.hawkular.apm.example.ordermgr.orders.OrdersHandler
+METHOD placeOrder(Order)
+HELPER org.hawkular.apm.agent.opentracing.OpenTracingManager
+AT ENTRY
+IF hasSpan()
+DO
+  getSpan().setTag("itemId",$1.getItemId()).setTag("quantity",""+$1.getQuantity());
+ENDRULE
+
+RULE OrdersHandler.evaluateAccount Start
+CLASS org.hawkular.apm.example.ordermgr.orders.OrdersHandler
+METHOD evaluateAccount
+HELPER org.hawkular.apm.agent.opentracing.OpenTracingManager
+AT ENTRY
+IF TRUE
+DO
+  startSpan(getTracer().buildSpan("evaluateAccount").withTag("component","EJB").withTag("accountId",$1.getName()));
+ENDRULE
+
+RULE OrdersHandler.evaluateAccount Finish
+CLASS org.hawkular.apm.example.ordermgr.orders.OrdersHandler
+METHOD evaluateAccount
+HELPER org.hawkular.apm.agent.opentracing.OpenTracingManager
+AT EXIT
+IF TRUE
+DO
+  finishSpan();
+ENDRULE
