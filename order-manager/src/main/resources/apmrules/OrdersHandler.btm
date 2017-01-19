@@ -6,8 +6,11 @@ HELPER org.hawkular.apm.agent.opentracing.OpenTracingManager
 AT ENTRY
 IF hasSpan()
 DO
+  getSpan().setTag("transaction","Place Order");
   getSpan().setTag("itemId",$1.getItemId()).setTag("quantity",""+$1.getQuantity());
 ENDRULE
+
+
 
 RULE OrdersHandler.evaluateAccount Start
 CLASS org.hawkular.apm.example.ordermgr.orders.OrdersHandler
