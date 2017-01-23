@@ -43,7 +43,7 @@ public class OrdersHandler {
     	System.out.println("ORDER = "+order);
     	Response accountResp = client.target("http://localhost:3001/accounts/"+order.getAccountId()).request().get();
     	if (accountResp.getStatus() >= 400) {
-    		Response.status(accountResp.getStatus()).entity(accountResp.getEntity()).build();
+    		return Response.status(accountResp.getStatus()).entity(accountResp.readEntity(String.class)).build();
     	}
     	Account acct = accountResp.readEntity(Account.class);
     	evaluateAccount(acct);
