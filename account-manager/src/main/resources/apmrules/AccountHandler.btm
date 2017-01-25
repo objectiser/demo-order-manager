@@ -1,5 +1,5 @@
 
-RULE AccountHandler.placeOrder Start
+RULE AccountHandler.getAccount Start
 CLASS org.hawkular.apm.example.ordermgr.accounts.AccountHandler
 METHOD getAccount
 HELPER org.hawkular.apm.agent.opentracing.OpenTracingManager
@@ -8,3 +8,15 @@ IF hasSpan()
 DO
   getSpan().setTag("http.url_template","/accounts/{accountId}");
 ENDRULE
+
+
+RULE AccountHandler.getAccount fault handling
+CLASS org.hawkular.apm.example.ordermgr.accounts.AccountHandler
+METHOD getAccount
+HELPER org.hawkular.apm.agent.opentracing.OpenTracingManager
+AFTER WRITE $fault
+IF hasSpan()
+DO
+  getSpan().setTag("fault",$fault);
+ENDRULE
+

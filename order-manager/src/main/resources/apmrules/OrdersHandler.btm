@@ -11,7 +11,6 @@ DO
 ENDRULE
 
 
-
 RULE OrdersHandler.evaluateAccount Start
 CLASS org.hawkular.apm.example.ordermgr.orders.OrdersHandler
 METHOD evaluateAccount
@@ -31,3 +30,15 @@ IF TRUE
 DO
   finishSpan();
 ENDRULE
+
+
+RULE Place Order fault handling
+CLASS org.hawkular.apm.example.ordermgr.orders.OrdersHandler
+METHOD placeOrder(Order)
+HELPER org.hawkular.apm.agent.opentracing.OpenTracingManager
+AFTER WRITE $fault
+IF hasSpan()
+DO
+  getSpan().setTag("fault",$fault);
+ENDRULE
+
